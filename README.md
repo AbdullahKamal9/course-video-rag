@@ -1,5 +1,4 @@
-# course-video-rag
-A RAG system that retrieves exact video timestamps from a course playlist based on student questions. Built with Sentence-Transformers, Chroma, and Groq LLM.
+# RAG-Based Video Q&A (Sigma Course)
 
 This project is a Retrieval-Augmented Generation (RAG) assistant that makes a video course instantly searchable and answerable. It transcribes course videos into time-stamped text chunks, creates semantic embeddings, stores them in a local Chroma vector database, and uses an LLM to answer user questions with relevant excerpts and exact video timestamps.
 
@@ -69,6 +68,30 @@ $env:GROQ_API_KEY = 'your_api_key_here'
 .\.venv\Scripts\python.exe process_incoming_mock.py
 ```
 
+## Using Your Own Videos
+
+To index your own video course:
+
+1. Place your video files (MP4, MKV, etc.) in a folder (e.g., `input_videos/`)
+
+2. Generate MP3s and transcripts:
+
+```powershell
+.\.venv\Scripts\python.exe video_to_mp3.py  # extracts audio from videos
+.\.venv\Scripts\python.exe mp3_to_json.py    # transcribes to timestamped JSON
+```
+
+3. Preprocess and build the vector database:
+
+```powershell
+Remove-Item -Recurse -Force chroma_db  # start fresh
+.\.venv\Scripts\python.exe preprocess_json.py
+```
+
+4. Query your indexed course using steps 4–5 above
+
+**Note:** The `jsons/` folder contains sample transcripts from a web development course. Replace them with your own transcriptions or regenerate using the steps above.
+
 ## Configuration & Environment
 - `GROQ_API_KEY` — your Groq API key for production LLM calls (do not commit).
 - `HF_TOKEN` — optional Hugging Face token to increase model download limits.
@@ -96,3 +119,5 @@ $env:TEMP='D:\pip_temp'; $env:TMP='D:\pip_temp'
 
 ## License & Attribution
 This project uses open-source libraries: SentenceTransformers, ChromaDB, HuggingFace transformers, and Groq client. Check each package's license for redistribution terms.
+
+---
